@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="battery_value_width">0dp</dimen>
+    <dimen name="battery_value_height">48dp</dimen>
+    <dimen name="row_padding">14dp</dimen>
+    <dimen name="row_padding_smol">4dp</dimen>
+</resources>
