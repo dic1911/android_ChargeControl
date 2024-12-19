@@ -14,4 +14,8 @@
     <string name="auto_refresh">Auto refresh</string>
     <string name="auto_refresh_off">Auto refresh off</string>
     <string name="no_root">Root access isn\'t granted! This app won\'t work without root!</string>
+    <string name="charging">Charging</string>
+    <string name="charge_blocked">Blocked</string>
+    <string name="charge_idle">Idle</string>
+    <string name="charge_na">N/A</string>
 </resources>
