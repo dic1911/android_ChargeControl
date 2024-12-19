@@ -33,13 +33,14 @@ class MainFragment : Fragment() {
         myActivity.setFragment(this)
 
         return binding.root
-
     }
 
     @SuppressLint("SetTextI18n")
-    fun refresh() {
-        binding.chargeStartValue.setText(myActivity.startLevel)
-        binding.chargeStopValue.setText(myActivity.stopLevel)
+    fun refresh(auto: Boolean) {
+        if (!auto) {
+            binding.chargeStartValue.setText(myActivity.startLevel)
+            binding.chargeStopValue.setText(myActivity.stopLevel)
+        }
         binding.batteryCycleValue.setText(myActivity.cycles)
         try {
             binding.batteryStatusValue.text = if (!myActivity.isCharging) myActivity.status
@@ -66,11 +67,12 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        for (i in 0..1) myActivity.writeValue(i, null)
 
         binding.buttonApply.setOnClickListener {
             if (!myActivity.hasSUAccess) myActivity.snack(getString(R.string.no_root))
             for (i in 0..1) {
-                val value = if (i == 0) binding.chargeStartValue.text.toString() else binding.chargeStopValue.text.toString().trim()
+                val value = if (i == 0) binding.chargeStartValue.text.toString().trim() else binding.chargeStopValue.text.toString().trim()
                 if (value.isNotBlank()) myActivity.writeValue(i, value)
             }
         }

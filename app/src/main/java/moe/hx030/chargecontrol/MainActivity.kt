@@ -1,7 +1,14 @@
 package moe.hx030.chargecontrol
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.FrameLayout
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -154,11 +161,11 @@ class MainActivity : AppCompatActivity() {
         val start = if (auto) 2 else 0
         for (i in Constants.PATH_MAP.keys) {
             if (i < start) continue
-            readValue(i)
+            readValue(i, auto)
         }
     }
 
-    fun readValue(type: Int) {
+    fun readValue(type: Int, isAutoRefresh: Boolean) {
         val path = Constants.PATH_MAP[type]
         val proc = Runtime.getRuntime().exec("su -c cat $path")
         val reader = BufferedReader(
@@ -190,23 +197,44 @@ class MainActivity : AppCompatActivity() {
         proc.waitFor()
 
         if (type >= 8) {
-            fragment.refresh()
+            fragment.refresh(isAutoRefresh)
         }
         isCharging = status.startsWith(Constants.STR_CHARGING)
         if (isCharging && type == Constants.BATT_STATUS) {
             for (i in 101..102) {
-                readValue(i)
+                readValue(i, isAutoRefresh)
             }
         }
     }
 
-    fun writeValue(type: Int, value: String) {
+    lateinit var ctx: Context
+    fun setContext(ctx: Context) {
+        this.ctx = ctx
+    }
+
+    fun writeValue(type: Int, value: String?) {
+        val prefs = if (this::ctx.isInitialized) ctx.getSharedPreferences("main", MODE_PRIVATE)
+                    else getSharedPreferences("main", MODE_PRIVATE)
         val path = Constants.PATH_MAP[type]
-        val proc = Runtime.getRuntime().exec("su -c bash -c \"echo $value > $path\"")
+        val key = path?.split("/")?.last()
+        var target = value
+        if (target == null) {
+            target = prefs.getString(key, Constants.DEFAULTS[type].toString())
+        }
+        val proc = Runtime.getRuntime().exec("su -c bash -c \"echo $target > $path\"")
         proc.waitFor()
-        Snackbar.make(binding.fab, "returned ${proc.exitValue()}", Snackbar.LENGTH_LONG)
-            .setAnchorView(R.id.fab).show()
-        readValue(type)
+        val ret = proc.exitValue()
+        if (value != null) {
+            Snackbar.make(binding.fab, "returned $ret", Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.fab).show()
+            readValue(type, false)
+        }
+        if (ret == 0) {
+            Log.d("030-chargectl", "$key set to $target")
+            prefs.edit().putString(path?.split("/")?.last(), target).apply()
+        } else {
+            Log.d("030-chargectl", "failed to set value for $key")
+        }
     }
 
     fun snack(str: String) {

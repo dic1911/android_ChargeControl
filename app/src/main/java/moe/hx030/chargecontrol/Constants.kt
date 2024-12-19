@@ -17,8 +17,11 @@ object Constants {
 
     val STR_CHARGING = "Charging"
 
+    val DEFAULTS = HashMap<Int, Int>()
     val PATH_MAP = HashMap<Int, String>()
     init {
+        DEFAULTS[0] = 0
+        DEFAULTS[1] = 100
         PATH_MAP[CHARGE_START] = "/sys/devices/platform/soc/soc:google,charger/charge_start_level"
         PATH_MAP[CHARGE_STOP] = "/sys/devices/platform/soc/soc:google,charger/charge_stop_level"
         PATH_MAP[BATT_CAPACITY] = "/sys/devices/platform/soc/soc:google,battery/power_supply/battery/charge_full"
