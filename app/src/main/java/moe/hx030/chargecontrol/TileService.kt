@@ -51,9 +51,10 @@ class QSTileService: TileService() {
 //    }
 
     private fun update(once: Boolean) {
-        while (!once) {
+        while (true) {
+            Utils.isCharging()
             val current = parseInt(Utils.readValue(Constants.BATT_CURRENT)).toFloat() / 1000
-            qsTile.state = if (Utils.isCharging()) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+            qsTile.state = Tile.STATE_ACTIVE
             qsTile.label = Utils.STATUS
             qsTile.subtitle =  "${current}mA"
             qsTile.updateTile()
