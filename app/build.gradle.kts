@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "moe.hx030.chargecontrol"
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 

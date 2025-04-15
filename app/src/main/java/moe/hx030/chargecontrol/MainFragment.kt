@@ -44,7 +44,8 @@ class MainFragment : Fragment() {
         binding.batteryCycleValue.setText(myActivity.cycles)
         try {
             binding.batteryStatusValue.text = if (!myActivity.isCharging) myActivity.status
-                else "${myActivity.status} (${myActivity.chargeType} - done: ${myActivity.chargeDone})"
+//                else "${myActivity.status} (${myActivity.chargeType} - done: ${myActivity.chargeDone})"
+                else "${myActivity.status} (${myActivity.chargeType})"
 
             binding.batteryTempValue.text = "${((parseInt(myActivity.temp).toFloat()) / 10)} ℃"
 
@@ -53,8 +54,9 @@ class MainFragment : Fragment() {
             binding.batteryCurrentValue.text = "${current}mA\n(Avg. ${currentAvg}mA)"
 
             val voltage = parseInt(myActivity.voltage).toFloat() / 1000000
-            val voltageAvg = parseInt(myActivity.voltageAvg).toFloat() / 1000000
-            binding.batteryVoltageValue.text = "${voltage}V\n(Avg. ${voltageAvg}V)"
+//            val voltageAvg = parseInt(myActivity.voltageAvg).toFloat() / 1000000
+//            binding.batteryVoltageValue.text = "${voltage}V\n(Avg. ${voltageAvg}V)"
+            binding.batteryVoltageValue.text = "${voltage}V"
 
             val full = parseInt(myActivity.fullCapacity.trim()) / 1000
             val fullDesign = parseInt(myActivity.fullCapacityDesign.trim()) / 1000

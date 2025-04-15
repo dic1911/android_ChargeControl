@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() {
             Constants.BATT_VOLTAGE -> voltage = cmdOutput
             Constants.BATT_VOLTAGE_AVG -> voltageAvg = cmdOutput
             Constants.CHARGE_TYPE -> chargeType = cmdOutput
-            Constants.CHARGE_DONE -> chargeDone = cmdOutput
+//            Constants.CHARGE_DONE -> chargeDone = cmdOutput
         }
         proc.waitFor()
 
