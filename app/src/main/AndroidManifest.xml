@@ -16,6 +16,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -28,6 +29,19 @@
             </intent-filter>
         </receiver>
         <service android:name="moe.hx030.chargecontrol.RestoreService" />
+
+        <service
+            android:name=".QSTileService"
+            android:exported="true"
+            android:label="@string/charge_na"
+            android:icon="@android:drawable/ic_lock_idle_charging"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
