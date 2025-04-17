@@ -37,6 +37,16 @@
         </receiver>
         <service android:name="moe.hx030.chargecontrol.RestoreService" />
 
+        <receiver android:name=".ChargingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="moe.hx030.chargecontrol.UNLIMIT_CHARGING" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".QSTileService"
             android:enabled="true"

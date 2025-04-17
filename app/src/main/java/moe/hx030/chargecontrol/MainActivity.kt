@@ -1,6 +1,8 @@
 package moe.hx030.chargecontrol
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -18,6 +20,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import moe.hx030.chargecontrol.databinding.ActivityMainBinding
 import java.io.BufferedReader
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var fragment: MainFragment
+    private lateinit var chargingReceiver: ChargingReceiver
+    var fab: FloatingActionButton? = null
     var startLevel = ""
     var stopLevel = ""
     var fullCapacity = "4049000" // div by 1k
@@ -70,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        fab = binding.fab
         binding.fab.setOnClickListener { _ ->
             if (!hasSUAccess) {
                 snack(getString(R.string.no_root))
@@ -80,6 +86,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         hasSUAccess = hasSU()
+        chargingReceiver = ChargingReceiver()
+        registerReceiver(chargingReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_POWER_CONNECTED)
+            addAction(Intent.ACTION_POWER_DISCONNECTED)
+        })
     }
 
     override fun onResume() {
@@ -109,6 +120,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         if (autoRefreshThread != null && autoRefreshThread!!.state != Thread.State.TERMINATED) {
             autoRefreshThread!!.interrupt()
+        }
+        if (this::chargingReceiver.isInitialized) {
+            unregisterReceiver(chargingReceiver)
         }
         super.onDestroy()
     }
@@ -166,19 +180,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun readValue(type: Int, isAutoRefresh: Boolean) {
-        val path = Constants.PATH_MAP[type]
-        val proc = Runtime.getRuntime().exec("su -c cat $path")
-        val reader = BufferedReader(
-            InputStreamReader(proc.inputStream)
-        )
-        var read: Int
-        val buffer = CharArray(512)
-        val output = StringBuffer()
-        while ((reader.read(buffer).also { read = it }) > 0) {
-            output.append(buffer, 0, read)
-        }
-        reader.close()
-        val cmdOutput = output.toString().trim()
+        val cmdOutput = Utils.readValue(type)
         when (type) {
             Constants.CHARGE_START -> startLevel = cmdOutput
             Constants.CHARGE_STOP -> stopLevel = cmdOutput
@@ -194,7 +196,6 @@ class MainActivity : AppCompatActivity() {
             Constants.CHARGE_TYPE -> chargeType = cmdOutput
 //            Constants.CHARGE_DONE -> chargeDone = cmdOutput
         }
-        proc.waitFor()
 
         if (type >= 8) {
             fragment.refresh(isAutoRefresh)
@@ -210,31 +211,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var ctx: Context
     fun setContext(ctx: Context) {
         this.ctx = ctx
-    }
-
-    fun writeValue(type: Int, value: String?) {
-        val prefs = if (this::ctx.isInitialized) ctx.getSharedPreferences("main", MODE_PRIVATE)
-                    else getSharedPreferences("main", MODE_PRIVATE)
-        val path = Constants.PATH_MAP[type]
-        val key = path?.split("/")?.last()
-        var target = value
-        if (target == null) {
-            target = prefs.getString(key, Constants.DEFAULTS[type].toString())
-        }
-        val proc = Runtime.getRuntime().exec("su -c bash -c \"echo $target > $path\"")
-        proc.waitFor()
-        val ret = proc.exitValue()
-        if (value != null) {
-            Snackbar.make(binding.fab, "returned $ret", Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab).show()
-            readValue(type, false)
-        }
-        if (ret == 0) {
-            Log.d("030-chargectl", "$key set to $target")
-            prefs.edit().putString(path?.split("/")?.last(), target).apply()
-        } else {
-            Log.d("030-chargectl", "failed to set value for $key")
-        }
     }
 
     fun snack(str: String) {

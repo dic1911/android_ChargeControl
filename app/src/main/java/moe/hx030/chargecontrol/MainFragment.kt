@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.snackbar.Snackbar
 import moe.hx030.chargecontrol.databinding.FragmentMainBinding
 import java.lang.Integer.parseInt
 
@@ -69,13 +70,20 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        for (i in 0..1) myActivity.writeValue(i, null)
+//        for (i in 0..1) Storage.writeValue(myActivity, i, null)
+        Utils.maybeRestore(myActivity)
 
         binding.buttonApply.setOnClickListener {
             if (!myActivity.hasSUAccess) myActivity.snack(getString(R.string.no_root))
             for (i in 0..1) {
                 val value = if (i == 0) binding.chargeStartValue.text.toString().trim() else binding.chargeStopValue.text.toString().trim()
-                if (value.isNotBlank()) myActivity.writeValue(i, value)
+                if (value.isNotBlank()) Storage.writeValue(myActivity, i, value, false) {
+                    myActivity.readValue(i, false)
+                    myActivity.fab?.let { fab ->
+                        Snackbar.make(fab, "returned $it", Snackbar.LENGTH_LONG)
+                            .setAnchorView(R.id.fab).show()
+                    }
+                }
             }
         }
     }

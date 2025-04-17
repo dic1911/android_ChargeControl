@@ -54,7 +54,8 @@ class RestoreService : Service() {
         }
         Thread.sleep(5000)
         val ret = super.onStartCommand(intent, flags, startId)
-        for (i in 0..1) a.writeValue(i, null)
+//        for (i in 0..1) Storage.writeValue(this, i, null, false, null)
+        Utils.maybeRestore(this)
         stopSelf()
         return ret
     }
