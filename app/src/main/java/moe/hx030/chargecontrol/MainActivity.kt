@@ -106,6 +106,8 @@ class MainActivity : AppCompatActivity() {
             dlg.show()
             snack(getString(R.string.no_root))
         }
+//        ChargingReceiver.maybeScheduleAlarm(this)
+        startForegroundService(Intent(this, ChargeMonitorService::class.java))
     }
 
     override fun onPause() {

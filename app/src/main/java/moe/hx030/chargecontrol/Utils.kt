@@ -17,6 +17,7 @@ import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.regex.Pattern
+import kotlin.math.roundToLong
 import kotlin.reflect.KClass
 
 
@@ -62,8 +63,12 @@ object Utils {
                     }
                 }
                 if (found) {
+                    val k = Constants.PATH_MAP[CHARGE_STOP]?.split("/")?.last()
+                    val target = ctx.getSharedPreferences("main", Context.MODE_PRIVATE).getString(k, Constants.DEFAULTS[CHARGE_STOP].toString())
+                        ?.let { Integer.parseInt(it) }
+                    val battDiff = 100 - Math.max(getBatteryLevel(ctx), target!!)
                     alarmTime = earliest
-                    unlimitAt = earliest - ((100 - getBatteryLevel(ctx)) * 2 * 60 * 1000) // schedule unlimit at 2 * (100 - current perc) mins
+                    unlimitAt = (earliest - (battDiff * 1.5 * 60 * 1000)).roundToLong() // schedule unlimit at 1.5 * (100 - current perc) mins
                     Log.d("030-chg_alarm", "alarm=$alarmTime unlimitAt=$unlimitAt")
                 } else {
                     Log.d("030-chg_alarm", "no alarm detected")
@@ -118,21 +123,39 @@ object Utils {
 
 
     fun scheduleAlarm(ctx: Context, triggerAtMillis: Long, receiver: Class<*>) {
-        if (triggerAtMillis < System.currentTimeMillis()) return
+        cancelAlarm(ctx, receiver)
+        if (triggerAtMillis < System.currentTimeMillis()) {
+            Log.w("030-alarm", "attempt to schedule alarm in past ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(triggerAtMillis)}")
+            return
+        }
+        val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(ctx, receiver)
+//        intent.action = "moe.hx030.chargecontrol.UNLIMIT_CHARGING"
+        val pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) {
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+//        } else {
+//            // Fall back for older Android versions that support setExactAndAllowWhileIdle
+        }
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+        Log.d("030-chg_alarm",
+            "scheduled at ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(triggerAtMillis)}")
+    }
+
+    fun cancelAlarm(ctx: Context, receiver: Class<*>) {
         val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(ctx, receiver)
         intent.action = "moe.hx030.chargecontrol.UNLIMIT_CHARGING"
-        val pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                triggerAtMillis, pendingIntent)
+
+        val pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE)
+
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
+            Log.d("030-chg_alarm", "Cancelled existing alarm")
         } else {
-            // Fall back for older Android versions that support setExactAndAllowWhileIdle
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                triggerAtMillis, pendingIntent)
+            Log.d("030-chg_alarm", "No existing alarm to cancel")
         }
-        Log.d("030-chg_alarm",
-            "scheduled at ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(triggerAtMillis)}")
     }
 
     fun maybeRestore(context: Context) {

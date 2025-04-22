@@ -40,12 +40,15 @@
         <receiver android:name=".ChargingReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.POWER_CONNECTED" />
+                <action android:name="android.intent.action.POWER_DISCONNECTED" />
+<!--                <action android:name="android.intent.action.BATTERY_CHANGED" />-->
                 <action android:name="moe.hx030.chargecontrol.UNLIMIT_CHARGING" />
             </intent-filter>
         </receiver>
+        <service android:name=".ChargeMonitorService"
+            android:foregroundServiceType="connectedDevice"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
             android:name=".QSTileService"
