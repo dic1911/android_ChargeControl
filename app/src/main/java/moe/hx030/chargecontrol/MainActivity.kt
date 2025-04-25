@@ -1,9 +1,11 @@
 package moe.hx030.chargecontrol
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.service.quicksettings.TileService
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -25,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import moe.hx030.chargecontrol.databinding.ActivityMainBinding
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.Integer.parseInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         if (hasSUAccess) {
             refresh(false)
             runAutoRefresh()
+            updateQSTileText()
         } else {
             val dlg = AlertDialog.Builder(this).setMessage(R.string.no_root)
             dlg.setOnDismissListener { dlg.show() }
@@ -108,6 +112,33 @@ class MainActivity : AppCompatActivity() {
         }
 //        ChargingReceiver.maybeScheduleAlarm(this)
         startForegroundService(Intent(this, ChargeMonitorService::class.java))
+        TileService.requestListeningState(this, ComponentName(this, QSTileService::class.java))
+    }
+
+
+    private fun updateQSTileText() {
+        try {
+            // Read battery current and level for tile info
+            val battCurrent = Utils.readValue(Constants.BATT_CURRENT)
+            val currentValue = try {
+                parseInt(battCurrent).toFloat() / 1000
+            } catch (e: Exception) {
+                0.0f
+            }
+
+            // Get battery percentage
+            val batteryPercentage = Utils.getBatteryLevel(this)
+
+            // Create a new intent to communicate with the TileService
+            val intent = Intent(this, QSTileService::class.java)
+            intent.action = "moe.hx030.chargecontrol.UPDATE_TILE"
+            intent.putExtra("tileLabel", "$batteryPercentage%")
+            intent.putExtra("tileSubtitle", "${currentValue}mA")
+            sendBroadcast(intent)
+            TileService.requestListeningState(this, ComponentName(this, QSTileService::class.java))
+        } catch (e: Exception) {
+            Log.e("030-tile", "Error updating tile: ${e.message}")
+        }
     }
 
     override fun onPause() {
