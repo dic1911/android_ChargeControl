@@ -41,6 +41,7 @@ class MainFragment : Fragment() {
         if (!auto) {
             binding.chargeStartValue.setText(myActivity.startLevel)
             binding.chargeStopValue.setText(myActivity.stopLevel)
+            binding.chargeUnlimitValue.setText("${Storage.getUnlimitMultiplier(myActivity)}")
         }
         binding.batteryCycleValue.setText(myActivity.cycles)
         try {
@@ -72,6 +73,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 //        for (i in 0..1) Storage.writeValue(myActivity, i, null)
         Utils.maybeRestore(myActivity)
+        binding.chargeUnlimitValue.setText("${Storage.getUnlimitMultiplier(myActivity)}")
 
         val applyRunnable = Runnable {
             if (!myActivity.hasSUAccess) myActivity.snack(getString(R.string.no_root))
@@ -85,6 +87,8 @@ class MainFragment : Fragment() {
                     }
                 }
             }
+
+            Storage.writeValue(myActivity, null, binding.chargeUnlimitValue.text.toString()) {}
         }
 
         binding.buttonApply.setOnClickListener { applyRunnable.run() }

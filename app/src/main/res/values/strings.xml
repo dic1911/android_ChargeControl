@@ -6,6 +6,7 @@
     <string name="detail">Detail</string>
     <string name="stop_level">Stop Level</string>
     <string name="start_level">Start Level</string>
+    <string name="unlimit_min">Un-limit charge time per %</string>
     <string name="battery_capacity">Battery Capacity</string>
     <string name="battery_cycle_count">Charge Cycle Count</string>
     <string name="battery_temp">Temperature</string>

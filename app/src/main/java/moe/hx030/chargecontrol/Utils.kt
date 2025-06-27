@@ -68,7 +68,7 @@ object Utils {
                         ?.let { Integer.parseInt(it) }
                     val battDiff = 100 - Math.max(getBatteryLevel(ctx), target!!)
                     alarmTime = earliest
-                    unlimitAt = (earliest - (battDiff * 1.5 * 60 * 1000)).roundToLong() // schedule unlimit at 1.5 * (100 - current perc) mins
+                    unlimitAt = (earliest - (battDiff * Storage.getUnlimitMultiplier(ctx)!! * 60 * 1000)).roundToLong() // schedule unlimit at 1.5 * (100 - current perc) mins
                     Log.d("030-chg_alarm", "alarm=$alarmTime unlimitAt=$unlimitAt")
                 } else {
                     Log.d("030-chg_alarm", "no alarm detected")

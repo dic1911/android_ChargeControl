@@ -8,16 +8,20 @@ import java.util.function.Consumer
 
 object Storage {
 
-    fun writeValue(ctx: Context, type: Int, value: String?, temp: Boolean = false, callback: Consumer<Number>?) {
+    fun writeValue(ctx: Context, type: Int?, value: String?, temp: Boolean = false, callback: Consumer<Number>?) {
         val prefs = if (temp) null else ctx.getSharedPreferences("main", MODE_PRIVATE)
         val path = Constants.PATH_MAP[type]
-        val key = path?.split("/")?.last()
+        val key = if (type != null) path?.split("/")?.last() else Constants.UNLIMIT_CHARGE_MULTIPLIER
         var target = value
         if (target == null) {
             target = prefs?.getString(key, Constants.DEFAULTS[type].toString())
         }
         if (target == null) {
             callback?.accept(Int.MIN_VALUE)
+            return
+        }
+        if (type == null) {
+            prefs?.edit()?.putString(key, value)?.apply()
             return
         }
         val proc = Runtime.getRuntime().exec("su -c bash -c \"echo $target > $path\"")
@@ -32,6 +36,12 @@ object Storage {
             Log.d("030-chargectl", "failed to set value for $key, current=$current")
         }
         callback?.accept(ret)
+    }
+
+    fun getUnlimitMultiplier(ctx: Context): Float? {
+        return ctx.getSharedPreferences("main", MODE_PRIVATE)
+            .getString(Constants.UNLIMIT_CHARGE_MULTIPLIER, "1.5")
+            ?.toFloatOrNull()
     }
 
     fun isLimitOverridden(): Boolean {

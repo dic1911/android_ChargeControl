@@ -20,6 +20,7 @@ object Constants {
     val DEFAULTS = HashMap<Int, Int>()
     const val PATH_BASE = "/sys/devices/platform/google,charger"
     const val BATT_PATH_BASE = "/sys/devices/platform/google,battery/power_supply/battery"
+    val UNLIMIT_CHARGE_MULTIPLIER = "unlimit_charge_multiplier"
     val PATH_MAP = HashMap<Int, String>()
     init {
         DEFAULTS[0] = 0
