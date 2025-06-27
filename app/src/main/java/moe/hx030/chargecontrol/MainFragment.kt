@@ -73,7 +73,7 @@ class MainFragment : Fragment() {
 //        for (i in 0..1) Storage.writeValue(myActivity, i, null)
         Utils.maybeRestore(myActivity)
 
-        binding.buttonApply.setOnClickListener {
+        val applyRunnable = Runnable {
             if (!myActivity.hasSUAccess) myActivity.snack(getString(R.string.no_root))
             for (i in 0..1) {
                 val value = if (i == 0) binding.chargeStartValue.text.toString().trim() else binding.chargeStopValue.text.toString().trim()
@@ -85,6 +85,13 @@ class MainFragment : Fragment() {
                     }
                 }
             }
+        }
+
+        binding.buttonApply.setOnClickListener { applyRunnable.run() }
+        binding.buttonReset.setOnClickListener {
+            binding.chargeStartText.setText("70")
+            binding.chargeStopText.setText("80")
+            applyRunnable.run()
         }
     }
 

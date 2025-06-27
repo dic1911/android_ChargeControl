@@ -2,6 +2,7 @@
     <string name="app_name">ChargeControl</string>
     <string name="main_fragment">Charge Control</string>
     <string name="apply">Apply</string>
+    <string name="reset">Reset</string>
     <string name="detail">Detail</string>
     <string name="stop_level">Stop Level</string>
     <string name="start_level">Start Level</string>
