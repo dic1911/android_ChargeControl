@@ -93,8 +93,8 @@ class MainFragment : Fragment() {
 
         binding.buttonApply.setOnClickListener { applyRunnable.run() }
         binding.buttonReset.setOnClickListener {
-            binding.chargeStartText.setText("70")
-            binding.chargeStopText.setText("80")
+            binding.chargeStartValue.setText("70")
+            binding.chargeStopValue.setText("80")
             applyRunnable.run()
         }
     }
