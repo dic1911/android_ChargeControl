@@ -1,12 +1,17 @@
 package moe.hx030.chargecontrol
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
+import android.graphics.ColorFilter
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import moe.hx030.chargecontrol.databinding.FragmentMainBinding
 import java.lang.Integer.parseInt
@@ -43,6 +48,17 @@ class MainFragment : Fragment() {
             binding.chargeStopValue.setText(myActivity.stopLevel)
             binding.chargeUnlimitValue.setText("${Storage.getUnlimitMultiplier(myActivity)}")
         }
+        if (Utils.batteryPercentage == 0) {
+            Utils.getBatteryLevel(myActivity)
+        }
+        binding.batteryPercentage.text = "${Utils.batteryPercentage}%"
+        binding.batteryProgress.progress = Utils.batteryPercentage
+
+        var colorId = R.color.battery_high
+        if (Utils.batteryPercentage <= 25) colorId = R.color.battery_low
+        else if (Utils.batteryPercentage <= 60) colorId = R.color.battery_medium
+        DrawableCompat.setTint((binding.batteryProgress.progressDrawable as LayerDrawable).findDrawableByLayerId(android.R.id.progress), resources.getColor(colorId))
+
         binding.batteryCycleValue.setText(myActivity.cycles)
         try {
             binding.batteryStatusValue.text = if (!myActivity.isCharging) myActivity.status

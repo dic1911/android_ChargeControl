@@ -3,309 +3,383 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MainFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_medium">
 
-        <LinearLayout
+        <!-- Battery Status Card -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_margin"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardBackgroundColor="@color/card_background">
 
             <LinearLayout
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button_reset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reset" />
-
-                <Button
-                    android:id="@+id/button_apply"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/apply" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/charge_start_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/charge_start_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/start_level" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <EditText
-                    android:id="@+id/charge_start_value"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/charge_stop_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/charge_stop_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/stop_level" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <EditText
-                    android:id="@+id/charge_stop_value"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/charge_unlimit_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/charge_unlimit_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/unlimit_min" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <EditText
-                    android:id="@+id/charge_unlimit_value"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/battery_capacity_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding_smol"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/battery_capacity_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/battery_capacity" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/battery_capacity_value"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:textSize="20sp"
-                    android:ems="10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/battery_cycle_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding_smol"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/battery_cycle_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/battery_cycle_count" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/battery_cycle_value"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:textSize="20sp"
-                    android:ems="10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/battery_temp_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding_smol"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/battery_temp_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/battery_temp" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/battery_temp_value"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:textSize="20sp"
-                    android:ems="10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/battery_current_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding_smol"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/battery_current_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/battery_current" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/battery_current_value"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:textSize="20sp"
-                    android:ems="10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/battery_voltage_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/row_padding_smol"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/battery_voltage_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/battery_voltage" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/battery_voltage_value"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/battery_value_height"
-                    android:textSize="20sp"
-                    android:ems="10" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/battery_status_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/row_padding_smol"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
 
                 <TextView
-                    android:id="@+id/battery_status_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/battery_status" />
+                    android:text="@string/battery_status_title"
+                    style="@style/TitleText"
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
-                <Space
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/battery_status_value"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:ems="10" />
+                    <!-- Battery Visual Indicator -->
+                    <RelativeLayout
+                        android:layout_width="@dimen/battery_indicator_size"
+                        android:layout_height="@dimen/battery_indicator_size"
+                        android:layout_marginEnd="@dimen/margin_large">
+
+                        <ProgressBar
+                            android:id="@+id/battery_progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="75"
+                            android:progressDrawable="@drawable/battery_level_indicator" />
+
+                        <TextView
+                            android:id="@+id/battery_percentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="75%"
+                            android:textSize="@dimen/text_size_title"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <!-- Battery Info -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="@dimen/margin_small">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/battery_status"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/text_secondary" />
+
+                            <TextView
+                                android:id="@+id/battery_status_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Charging"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/battery_charging"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="@dimen/margin_small">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/battery_temp"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/text_secondary" />
+
+                            <TextView
+                                android:id="@+id/battery_temp_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="32°C"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/battery_voltage"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/text_secondary" />
+
+                            <TextView
+                                android:id="@+id/battery_voltage_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4.2V"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
+        <!-- Charge Control Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_margin"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardBackgroundColor="@color/card_background">
 
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/charge_control_title"
+                    style="@style/TitleText"
+                    android:layout_marginBottom="@dimen/margin_medium" />
+
+                <!-- Start Level -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/margin_medium">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/start_level"
+                        style="@style/SubtitleText"
+                        android:layout_marginBottom="@dimen/margin_small" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/CustomTextInputLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/charge_start_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter start level (%)"
+                            android:inputType="numberDecimal"
+                            android:textSize="@dimen/text_size_body" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Stop Level -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/margin_medium">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stop_level"
+                        style="@style/SubtitleText"
+                        android:layout_marginBottom="@dimen/margin_small" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/charge_stop_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter stop level (%)"
+                            android:inputType="numberDecimal"
+                            android:textSize="@dimen/text_size_body" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Unlimit Time -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/margin_large">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unlimit_min"
+                        style="@style/SubtitleText"
+                        android:layout_marginBottom="@dimen/margin_small" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/charge_unlimit_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter time (minutes)"
+                            android:inputType="numberDecimal"
+                            android:textSize="@dimen/text_size_body" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Action Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+
+                    <Button
+                        android:id="@+id/button_reset"
+                        style="@style/SecondaryButton"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:text="@string/reset" />
+
+                    <Button
+                        android:id="@+id/button_apply"
+                        style="@style/PrimaryButton"
+                        android:layout_width="wrap_content"
+                        android:text="@string/apply" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Battery Details Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardBackgroundColor="@color/card_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/battery_details_title"
+                    style="@style/TitleText"
+                    android:layout_marginBottom="@dimen/margin_medium" />
+
+                <!-- Battery Capacity -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/margin_small">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/battery_capacity"
+                        style="@style/BodyText" />
+
+                    <TextView
+                        android:id="@+id/battery_capacity_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4000 mAh"
+                        style="@style/ValueText" />
+                </LinearLayout>
+
+                <!-- Battery Cycle Count -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/margin_small">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/battery_cycle_count"
+                        style="@style/BodyText" />
+
+                    <TextView
+                        android:id="@+id/battery_cycle_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="245"
+                        android:textSize="@dimen/text_size_body"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Battery Current -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/battery_current"
+                        style="@style/BodyText" />
+
+                    <TextView
+                        android:id="@+id/battery_current_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1500 mA"
+                        android:textSize="@dimen/text_size_body"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -98,7 +98,7 @@ object Utils {
 
 
     var lastIsCharging = false
-    var batteryPercentage = 69
+    var batteryPercentage = 0
     fun getBatteryLevel(context: Context): Int {
         val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val batteryStatus = context.registerReceiver(null, intentFilter)

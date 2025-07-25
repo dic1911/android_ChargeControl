@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape android:shape="oval" android:useLevel="false">
+            <solid android:color="@color/surface_variant" />
+            <stroke
+                android:width="4dp"
+                android:color="@color/text_hint" />
+        </shape>
+    </item>
+
+    <!-- Progress indicator -->
+    <item android:id="@android:id/progress">
+        <rotate
+            android:fromDegrees="-90"
+            android:toDegrees="270"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape
+                android:shape="ring"
+                android:innerRadiusRatio="2.3"
+                android:thicknessRatio="18"
+                android:useLevel="true">
+                <solid android:color="@color/battery_high" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
