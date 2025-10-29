@@ -28,6 +28,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var myActivity: MainActivity
+    private var percentage = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,12 +52,15 @@ class MainFragment : Fragment() {
         if (Utils.batteryPercentage == 0) {
             Utils.getBatteryLevel(myActivity)
         }
-        binding.batteryPercentage.text = "${Utils.batteryPercentage}%"
-        binding.batteryProgress.progress = Utils.batteryPercentage
+        if (percentage != Utils.batteryPercentage) {
+            percentage = Utils.batteryPercentage
+        }
+        binding.batteryPercentage.text = "${percentage}%"
+        binding.batteryProgress.progress = percentage
 
         var colorId = R.color.battery_high
-        if (Utils.batteryPercentage <= 25) colorId = R.color.battery_low
-        else if (Utils.batteryPercentage <= 60) colorId = R.color.battery_medium
+        if (percentage <= 25) colorId = R.color.battery_low
+        else if (percentage <= 60) colorId = R.color.battery_medium
         DrawableCompat.setTint((binding.batteryProgress.progressDrawable as LayerDrawable).findDrawableByLayerId(android.R.id.progress), resources.getColor(colorId))
 
         binding.batteryCycleValue.setText(myActivity.cycles)

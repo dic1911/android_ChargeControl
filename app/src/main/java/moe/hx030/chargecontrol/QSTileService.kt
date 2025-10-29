@@ -80,11 +80,17 @@ class QSTileService: TileService() {
                     Log.e(TAG, "Error reading battery current: ${e.message}")
                     0.0f
                 }
+                val temp = try {
+                    parseInt(Utils.readValue(Constants.BATT_TEMP)).toFloat() / 10
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error reading battery temp: ${e.message}")
+                    0.0f
+                }
 
                 // Always keep tile active
                 qsTile.state = Tile.STATE_ACTIVE
                 qsTile.label = Utils.STATUS
-                qsTile.subtitle = "${current}mA"
+                qsTile.subtitle = "${current}mA / ${temp} ℃"
                 qsTile.updateTile()
                 Log.d(TAG, "update -> ${qsTile.label} ${qsTile.state}")
             } catch (e: Exception) {
